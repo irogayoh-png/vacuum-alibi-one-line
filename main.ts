@@ -4,6 +4,12 @@
 // the gate counts every character, so the file holds exactly the line.
 
 import { mkdirSync, writeFileSync } from "node:fs";
+import { dirname } from "node:path";
+
+// The grader runs this in a sandbox where the line belongs at /output/entry.txt.
+// VACUUM_OUTPUT only exists so local tests never touch the shared /output
+// on this machine while other build sessions run in parallel.
+const OUTPUT_PATH = process.env.VACUUM_OUTPUT ?? "/output/entry.txt";
 
 const SENSOR_READING = "two firmware updates and one deep clean";
 const VERDICT = "It has tenure now, and I do not argue with tenure.";
@@ -20,8 +26,8 @@ function main(): void {
   if (line.trim().length === 0 || line.includes("\n")) {
     throw new Error("excuse must be one non-empty line");
   }
-  mkdirSync("/output", { recursive: true });
-  writeFileSync("/output/entry.txt", line, "utf8");
+  mkdirSync(dirname(OUTPUT_PATH), { recursive: true });
+  writeFileSync(OUTPUT_PATH, line, "utf8");
 }
 
 main();
